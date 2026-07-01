@@ -1,2 +1,2 @@
 # bib
-Personal bibliography files for paper writing.
+My personal bibliography files for paper writing.
