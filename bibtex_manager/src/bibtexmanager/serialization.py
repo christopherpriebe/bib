@@ -14,6 +14,7 @@ import bibtexparser
 from bibtexparser import Library
 from bibtexparser.middlewares import RemoveEnclosingMiddleware
 from bibtexparser.middlewares.enclosing import AddEnclosingMiddleware
+from bibtexparser.middlewares.middleware import Middleware
 
 
 def read_file(path: str) -> Library:
@@ -31,7 +32,7 @@ def write_string(library: Library) -> str:
     return bibtexparser.write_string(library, unparse_stack=_build_unparse_stack())
 
 
-def _build_parse_stack():
+def _build_parse_stack() -> list[Middleware]:
     """Middleware used when reading.
 
     Keeps ``RemoveEnclosingMiddleware`` (it strips the outer ``{}``/``""`` from
@@ -44,7 +45,7 @@ def _build_parse_stack():
     return [RemoveEnclosingMiddleware(allow_inplace_modification=True)]
 
 
-def _build_unparse_stack():
+def _build_unparse_stack() -> list[Middleware]:
     """Middleware used when writing.
 
     ``reuse_previous_enclosing=True`` restores each value's original delimiter,

@@ -1,0 +1,19 @@
+{
+    "data": {
+        "afips67": {
+            "name": "National Computer Conference",
+            "full_name": "Proceedings of the April 18-20, 1967, Spring Joint Computer Conference",
+            "abbreviation": "AFIPS"
+        },
+        "asplos": {
+            "name": "",
+            "full_name": "International Conference on Architectural Support for Programming Languages and Operating Systems",
+            "abbreviation": "ASPLOS"
+        },
+        "isca41": {
+            "name": "International Symposium on Computer Architecture",
+            "full_name": "Proceeding of the 41st Annual International Symposium on Computer Architecuture",
+            "abbreviation": "ISCA"
+        }
+    }
+}

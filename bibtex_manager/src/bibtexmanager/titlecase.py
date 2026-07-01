@@ -13,6 +13,8 @@ letter of every other word is capitalized.
 This module is pure text processing and has no BibTeX dependency.
 """
 
+from collections.abc import Iterator
+
 _WORDS_KEPT_LOWERCASE = frozenset({
     "a", "an", "the",
     "and", "as", "but", "for", "if", "nor", "or", "so", "yet",
@@ -22,10 +24,10 @@ _WORDS_KEPT_LOWERCASE = frozenset({
 _CLAUSE_ENDING_PUNCTUATION = (":", "?", "!")
 
 
-def capitalize_title(title):
+def capitalize_title(title: str) -> str:
     """Return ``title`` in title case, leaving ``{brace-protected}`` text as-is."""
     must_capitalize = True
-    result = []
+    result: list[str] = []
     for is_whitespace, token in _iterate_tokens(title):
         if is_whitespace:
             result.append(token)
@@ -35,11 +37,11 @@ def capitalize_title(title):
     return "".join(result)
 
 
-def _iterate_tokens(title):
+def _iterate_tokens(title: str) -> Iterator[tuple[bool, str]]:
     """Yield ``(is_whitespace, text)`` tokens, not splitting inside braces."""
-    token_characters = []
+    token_characters: list[str] = []
     brace_depth = 0
-    current_is_whitespace = None
+    current_is_whitespace = False
     for character in title:
         is_whitespace = character.isspace() and brace_depth == 0
         if character == "{":
@@ -47,7 +49,7 @@ def _iterate_tokens(title):
         elif character == "}":
             brace_depth = max(0, brace_depth - 1)
 
-        if current_is_whitespace is None:
+        if not token_characters:
             current_is_whitespace = is_whitespace
             token_characters = [character]
         elif is_whitespace == current_is_whitespace:
@@ -61,7 +63,7 @@ def _iterate_tokens(title):
         yield current_is_whitespace, "".join(token_characters)
 
 
-def _recase_word(word, must_capitalize):
+def _recase_word(word: str, must_capitalize: bool) -> str:
     """Apply title-case rules to a single whitespace-delimited word.
 
     Any ``{...}`` region is left verbatim: it is never re-cased, never split,
@@ -81,12 +83,12 @@ def _recase_word(word, must_capitalize):
     return leading + "-".join(recased_parts) + trailing
 
 
-def _stays_lowercase(core):
+def _stays_lowercase(core: str) -> bool:
     """Report whether a word stays lowercase mid-title and is not brace-protected."""
     return "{" not in core and core.lower() in _WORDS_KEPT_LOWERCASE
 
 
-def _is_already_cased(part):
+def _is_already_cased(part: str) -> bool:
     """Report whether a token's casing is deliberate and must be preserved.
 
     A token that already contains an uppercase letter is assumed to be an
@@ -96,13 +98,13 @@ def _is_already_cased(part):
     return any(character.isupper() for character in part)
 
 
-def _strip_edge_punctuation(word):
+def _strip_edge_punctuation(word: str) -> tuple[str, str, str]:
     """Split a word into ``(leading, core, trailing)`` punctuation runs.
 
     Curly braces count as part of the core, never as edge punctuation, so a
     protected token like ``{ML})`` keeps its opening brace.
     """
-    def is_edge_character(character):
+    def is_edge_character(character: str) -> bool:
         return not (character.isalnum() or character in "{}")
 
     start = 0
@@ -114,7 +116,7 @@ def _strip_edge_punctuation(word):
     return word[:start], word[start:end], word[end:]
 
 
-def _capitalize_first_unprotected(text):
+def _capitalize_first_unprotected(text: str) -> str:
     """Uppercase the first letter that is not inside curly braces."""
     brace_depth = 0
     for index, character in enumerate(text):
@@ -127,10 +129,10 @@ def _capitalize_first_unprotected(text):
     return text
 
 
-def _split_unprotected(text, separator):
+def _split_unprotected(text: str, separator: str) -> list[str]:
     """Split ``text`` on ``separator``, but only at brace depth zero."""
-    parts = []
-    current_part = []
+    parts: list[str] = []
+    current_part: list[str] = []
     brace_depth = 0
     for character in text:
         if character == "{":

@@ -7,7 +7,7 @@ name = "bibtexmanager"
 version = "0.0.1"
 description = "CLI to organize BibTeX entries."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Christopher Priebe" }]
 dependencies = ["bibtexparser>=2.0.0b8,<3"]
